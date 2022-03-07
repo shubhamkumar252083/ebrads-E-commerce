@@ -1,0 +1,162 @@
+{% load static %}
+
+<!-- Page Preloder -->
+<div id="preloder">
+  <div class="loader"></div>
+</div>
+
+<!-- Header section -->
+<header class="header-section">
+  <div class="header-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2 text-center text-lg-left">
+          <!-- logo -->
+          <a href="{% url 'home' %}" class="site-logo">
+            <img src="{%static './img/logo.png'%}" alt="">
+          </a>
+        </div>
+        <div class="col-xl-6 col-lg-5">
+          <form action="{% url 'search' %}" class="header-search-form" method='GET'>
+            <input type="text" placeholder="Search" name="keyword" required>
+            <button type="submit"><i class="flaticon-search"></i></button>
+          </form>
+        </div>
+
+        <div class="col-xl-4 col-lg-5">
+          <div class="user-panel">
+            {% if user.id is None %}
+            <div class="up-item">
+              <i class="flaticon-profile"></i>
+              <a href="{% url 'login' %}">Sign</a> In or <a href="{% url 'register' %}">Create Account</a>
+            </div>
+            {% else %}
+            <div class="up-item">
+              <i class="flaticon-profile"></i>
+              <a href="{% url 'dashboard' %}">Welcome {{user.first_name}}!</a> <span class="dark-transp"> | </span> <a
+                href="{% url 'logout' %}">Logout</a>
+            </div>
+            <div class="up-item">
+              <div class="shopping-card">
+                <i class="flaticon-bag"></i>
+                <span>{{cart_count}}</span>
+              </div>
+              <a href="{% url 'cart' %}">Shopping Cart</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="main-navbar">
+    <div class="container">
+      <!-- menu -->
+      <ul class="main-menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Women</a></li>
+        <li><a href="#">Men</a></li>
+        <li><a href="#">Jewelry
+            <span class="new">New</span>
+          </a></li>
+        <li><a href="#">Shoes</a>
+          <ul class="sub-menu">
+            <li><a href="#">Sneakers</a></li>
+            <li><a href="#">Sandals</a></li>
+            <li><a href="#">Formal Shoes</a></li>
+            <li><a href="#">Boots</a></li>
+            <li><a href="#">Flip Flops</a></li>
+          </ul>
+        </li>
+        <li><a href="#">All category</a>
+          <ul class="sub-menu">
+            <li><a href="{% url 'store' %}">All Products</a></li>
+            {% for category in links %}
+            <li><a href="{{ category.get_url }}">{{ category.category_name }} </a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<!-- Header section end -->
+
+{% comment %}
+<header class="section-header">
+
+
+
+  <section class="header-main border-bottom">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-2 col-md-3 col-6">
+          <a href="{% url 'home' %}" class="brand-wrap">
+            <img class="logo" src="{% static './images/logo.png' %}">
+          </a> <!-- brand-wrap.// -->
+        </div>
+        <div class="col-lg col-sm col-md col-6 flex-grow-0">
+          <div class="category-wrap dropdown d-inline-block float-right">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bars"></i> All category
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'store' %}">All Products </a>
+              {% for category in links %}
+              <a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }} </a>
+              {% endfor %}
+            </div>
+          </div> <!-- category-wrap.// -->
+        </div> <!-- col.// -->
+        <a href="{% url 'store' %}" class="btn btn-outline-primary">Store</a>
+        <div class="col-lg  col-md-6 col-sm-12 col">
+          <form action="{% url 'search' %}" class="search" method='GET'>
+            <div class="input-group w-100">
+              <input type="text" class="form-control" style="width:60%;" placeholder="Search" name="keyword" required>
+
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form> <!-- search-wrap .end// -->
+        </div> <!-- col.// -->
+        <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
+          <div class="d-flex justify-content-end mb-3 mb-lg-0">
+            {% if user.id is None %}
+            <div class="widget-header">
+              <small class="title text-muted">Welcome guest!</small>
+              <div>
+                <a href="{% url 'login' %}">Sign in</a> <span class="dark-transp"> | </span>
+                <a href="{% url 'register' %}"> Register</a>
+              </div>
+            </div>
+            {% else %}
+            <div class="widget-header">
+              <small class="title text-muted">Welcome {{user.first_name}}!</small>
+              <div>
+                <a href="{% url 'dashboard' %}">Dashboard</a> <span class="dark-transp"> | </span>
+                <a href="{% url 'logout' %}"> Logout</a>
+              </div>
+            </div>
+            {% endif %}
+            <a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
+              <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
+              <span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
+            </a>
+
+          </div> <!-- widgets-wrap.// -->
+
+        </div> <!-- col.// -->
+      </div> <!-- row.// -->
+    </div> <!-- container.// -->
+  </section> <!-- header-main .// -->
+
+
+
+
+</header> <!-- section-header.// -->
+{% endcomment %}

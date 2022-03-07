@@ -1,0 +1,72 @@
+{% load static %}
+
+{%comment%}
+context = {
+'products': products,
+'reviews': reviews,
+}
+{%endcomment%}
+
+
+
+<!-- Product filter section -->
+<section class="product-filter-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>BROWSE TOP SELLING PRODUCTS</h2>
+    </div>
+    <ul class="product-filter-menu">
+      <li><a href="#">TOPS</a></li>
+      <li><a href="#">JUMPSUITS</a></li>
+      <li><a href="#">LINGERIE</a></li>
+      <li><a href="#">JEANS</a></li>
+      <li><a href="#">DRESSES</a></li>
+      <li><a href="#">COATS</a></li>
+      <li><a href="#">JUMPERS</a></li>
+      <li><a href="#">LEGGINGS</a></li>
+
+    </ul>
+    <div class="row">
+
+      {% for product in products %}
+      <div class="col-lg-3 col-sm-6">
+        <div class="product-item">
+          <div class="pi-pic">
+            <div class="tag-sale">ON SALE</div>
+            <a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"> </a>
+            <div class="pi-links">
+              <a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
+              <a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+            </div>
+          </div>
+          <div class="rating-star">
+            <span>
+              <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}"
+                aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}"
+                aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}"
+                aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}"
+                aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}"
+                aria-hidden="true"></i>
+            </span>
+          </div>
+          <div class="pi-text">
+            <h6>&#8377;{{ product.price }}</h6>
+            <p>{{ product.product_name }} </p>
+          </div>
+
+
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+    <div class="text-center pt-5">
+      <button class="site-btn sb-line sb-dark">LOAD MORE</button>
+    </div>
+  </div>
+</section>
+<!-- Product filter section end -->
