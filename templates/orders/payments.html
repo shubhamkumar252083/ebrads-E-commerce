@@ -159,6 +159,11 @@
 	var payment_method = 'PayPal'
 	var redirect_url = "{% url 'order_complete' %}"
 
+	const codId = function () {
+		return "COD-" + Date.now().toString(36) + Math.random().toString(36).substr(2);
+	}
+
+
 	// change transection id for COD..
 	function sendDataCod() {
 		fetch(url, {
@@ -169,7 +174,7 @@
 			},
 			body: JSON.stringify({
 				orderID: orderID,
-				transID: "COD-transID",
+				transID: codId(),
 				payment_method: "cod",
 				status: "pending",
 			}),
