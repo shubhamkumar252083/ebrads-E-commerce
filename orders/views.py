@@ -8,20 +8,39 @@ import json
 from store.models import Product
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+import uuid
 
 
 def payments(request):
     body = json.loads(request.body)
-    order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
+    """
+    body variable is assigned after we complete the payment through paypal. 
+    body = {'orderID': '2022032527', 'transID': '7HF37979RH6105546', 'payment_method': 'PayPal', 'status': 'COMPLETED'}
+    
+    """
+
+    order = Order.objects.get(
+        user=request.user, is_ordered=False, order_number=body['orderID'])
 
     # Store transaction details inside Payment model
+    print(body)
+    print(body['payment_method'])
+    # if body['payment_method'] is 'PayPal':
+    #     payment_method = 'PayPal'
+    #     payment_id = body['transID']
+    #     status = body['status']
+    # else:
+    #     payment_method = "COD"
+    #     payment_id = "COD-" + uuid.uuid4().hex[:20].upper()
+    #     status = "PENDING"
     payment = Payment(
-        user = request.user,
-        payment_id = body['transID'],
-        payment_method = body['payment_method'],
-        amount_paid = order.order_total,
-        status = body['status'],
+        user=request.user,
+        payment_id=body['transID'],
+        payment_method=body['payment_method'],
+        amount_paid=order.order_total,
+        status=body['status'],
     )
+
     payment.save()
 
     order.payment = payment
@@ -48,7 +67,6 @@ def payments(request):
         orderproduct.variations.set(product_variation)
         orderproduct.save()
 
-
         # Reduce the quantity of the sold products
         product = Product.objects.get(id=item.product_id)
         product.stock -= item.quantity
@@ -73,6 +91,10 @@ def payments(request):
         'transID': payment.payment_id,
     }
     return JsonResponse(data)
+
+
+# setup in place_order
+
 
 def place_order(request, total=0, quantity=0,):
     current_user = request.user
@@ -115,13 +137,14 @@ def place_order(request, total=0, quantity=0,):
             yr = int(datetime.date.today().strftime('%Y'))
             dt = int(datetime.date.today().strftime('%d'))
             mt = int(datetime.date.today().strftime('%m'))
-            d = datetime.date(yr,mt,dt)
-            current_date = d.strftime("%Y%m%d") #20210305
+            d = datetime.date(yr, mt, dt)
+            current_date = d.strftime("%Y%m%d")  # 20210305
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()
 
-            order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+            order = Order.objects.get(
+                user=current_user, is_ordered=False, order_number=order_number)
             context = {
                 'order': order,
                 'cart_items': cart_items,
@@ -132,6 +155,20 @@ def place_order(request, total=0, quantity=0,):
             return render(request, 'orders/payments.html', context)
     else:
         return redirect('checkout')
+
+
+def cod(request):
+    order_number = request.POST.get("order_number")
+    # transID = request.GET.get('payment_id')
+    # body = {'orderID': '2022032527', 'transID': '7HF37979RH6105546', 'payment_method': 'PayPal', 'status': 'COMPLETED'}
+    print(f"order_number =  {order_number}")
+    # x = "COD-" + uuid.uuid4().hex[:20].upper() #for payment_id
+    # body = json.loads(request.body)
+    # order = Order.objects.get(
+    #     user=request.user, is_ordered=False, order_number=body['orderID'])
+
+    response = HttpResponse('Hello World', content_type="text/plain")
+    return response
 
 
 def order_complete(request):
